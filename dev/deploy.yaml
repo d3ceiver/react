@@ -36,7 +36,7 @@ spec:
       volumes:
         - name: react-volume
           persistentVolumeClaim:
-            claimName: your-pvc-name  # Replace with your actual PVC name
+            claimName: react-app-pvc  # Use your actual PVC name
 ---
 apiVersion: v1
 kind: Service
