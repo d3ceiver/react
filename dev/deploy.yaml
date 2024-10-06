@@ -13,24 +13,42 @@ spec:
       labels:
         app: react-app
     spec:
+      hostNetwork: true  # Ensure it uses the host network
       containers:
         - name: react-container
-          image: node:latest
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - mountPath: /app  # This is where your code will be stored
-              name: react-app-storage  # Name of the volume
+          image: node:18  # Use a specific version of Node.js
           command: ["/bin/sh", "-c"]
           args:
-            - npm install -g npm@10.9.0 && \
+            - |
+              npm install -g npm@10.9.0 && \
               npm install -g create-react-app && \
               npx create-react-app /app && \
               cd /app && \
-              npm start --host 0.0.0.0 --port 80
+              npm start --host 0.0.0.0 --port 80  # Serve the app on port 80
+          ports:
+            - containerPort: 80  # Changed to 80
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app
+              name: react-volume
+      nodeSelector:
+        kubernetes.io/hostname: slave2  # Ensure the pod runs on slave2
       volumes:
-        - name: react-app-storage
+        - name: react-volume
           persistentVolumeClaim:
-            claimName: react-app-pvc  # Reference your PVC here
-
-
+            claimName: your-pvc-name  # Replace with your actual PVC name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-app-service
+  namespace: node-js
+spec:
+  type: NodePort
+  selector:
+    app: react-app
+  ports:
+    - protocol: TCP
+      port: 80        # External HTTP port
+      targetPort: 80  # Target port inside the container
+      nodePort: 32000  # NodePort for host access
