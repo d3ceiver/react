@@ -1,78 +1,35 @@
-name: 'Build & Test'
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  build:
-    name: 'Build (${{ matrix.os }}, Node ${{ matrix.node }})'
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - 'ubuntu-latest'
-        node:
-          - '16'  # Update this if a newer version supports ARM
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js for ARM
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'npm'
-          architecture: 'arm'  # Specify architecture for ARM
-      - name: Install dependencies
-        run: npm ci --prefer-offline
-      - name: Build
-        run: npm run build
-
-  integration:
-    name: 'Integration Tests (${{ matrix.os }}, Node ${{ matrix.node }})'
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - 'ubuntu-latest'
-          - 'macos-latest'  # Typically not ARM; consider removing if unnecessary
-          - 'windows-latest'  # Typically not ARM; consider removing if unnecessary
-        node:
-          - '16'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js for ARM
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'npm'
-          architecture: 'arm'  # Specify architecture for ARM
-      - name: Install dependencies
-        run: npm ci --prefer-offline
-      - name: Install yarn
-        run: npm install -g yarn
-      - name: Run integration tests
-        run: npm run test:integration
-
-  e2e-simple:
-    name: E2E Simple
-    uses: ./.github/workflows/e2e-base.yml
-    with:
-      testScript: 'tasks/e2e-simple.sh'
-
-  e2e-installs:
-    name: E2E Installs
-    uses: ./.github/workflows/e2e-base.yml
-    with:
-      testScript: 'tasks/e2e-installs.sh'
-
-  e2e-kitchensink:
-    name: E2E Kitchensink
-    uses: ./.github/workflows/e2e-base.yml
-    with:
-      testScript: 'tasks/e2e-kitchensink.sh'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-app
+  labels:
+    app: react-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-app
+  template:
+    metadata:
+      labels:
+        app: react-app
+    spec:
+      hostNetwork: true  # Ensures the pod uses the host network and IP
+      containers:
+      - name: react-container
+        image: node:alpine
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            npm install -g create-react-app && \
+            npx create-react-app /app && \
+            cd /app && \
+            npm start --host 0.0.0.0  # Binds the app to all network interfaces
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: react-volume
+          mountPath: /app
+      volumes:
+      - name: react-volume
+        emptyDir: {}
