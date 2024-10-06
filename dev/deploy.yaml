@@ -16,7 +16,7 @@ spec:
       hostNetwork: true  # Ensure it uses the host network
       containers:
         - name: react-container
-          image: node:18  # Use a specific version of Node.js
+          image: node:latest  # Use a specific version of Node.js
           command: ["/bin/sh", "-c"]
           args:
             - |
