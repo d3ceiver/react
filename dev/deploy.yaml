@@ -16,7 +16,7 @@ spec:
       hostNetwork: true  # Ensure it uses the host network
       containers:
         - name: react-container
-          image: node:alpine
+          image: node:latest
           command: ["/bin/sh", "-c"]
           args:
             - |
