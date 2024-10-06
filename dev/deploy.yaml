@@ -18,14 +18,14 @@ spec:
         - name: react-container
           image: node:latest  # Use a specific version of Node.js
           command: ["/bin/sh", "-c"]
-         args:
-          - |
-          npm install -g npm@10.9.0 && \
-          npm install -g create-react-app && \
-          rm -rf /app/* && \  # Remove existing files
-          npx create-react-app /app && \
-          cd /app && \
-          npm start --host 0.0.0.0 --port 80  # Serve the app on port 80
+          args:
+            - |
+              npm install -g npm@10.9.0 && \
+              npm install -g create-react-app && \
+              rm -rf /app/* && \  # Remove existing files
+              npx create-react-app /app && \
+              cd /app && \
+              npm start --host 0.0.0.0 --port 80  # Serve the app on port 80
           ports:
             - containerPort: 80  # Changed to 80
               protocol: TCP
@@ -38,6 +38,7 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc  # Use your actual PVC name
+
 ---
 apiVersion: v1
 kind: Service
@@ -53,3 +54,4 @@ spec:
       port: 80        # External HTTP port
       targetPort: 80  # Target port inside the container
       nodePort: 32000  # NodePort for host access
+
