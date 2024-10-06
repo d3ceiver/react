@@ -1,69 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-    kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"react-app","argocd.argoproj.io/instance":"node.js"},"name":"react-app","namespace":"node-js"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"react-app"}},"template":{"metadata":{"labels":{"app":"react-app"}},"spec":{"containers":[{"args":["npm
-      install -g create-react-app \u0026\u0026 \\\nnpx create-react-app /app
-      \u0026\u0026 \\\ncd /app \u0026\u0026 \\\nnpm start --host 0.0.0.0  #
-      Binds the app to all network
-      interfaces\n"],"command":["/bin/sh","-c"],"image":"node:alpine","name":"react-container","ports":[{"containerPort":3000}],"volumeMounts":[{"mountPath":"/app","name":"react-volume"}]}],"hostNetwork":true,"volumes":[{"emptyDir":{},"name":"react-volume"}]}}}}
-  creationTimestamp: 2024-10-06T18:31:21Z
-  generation: 1
-  labels:
-    app: react-app
-    argocd.argoproj.io/instance: node.js
   name: react-app
   namespace: node-js
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: react-app
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: react-app
     spec:
-      hostNetwork: true  # Ensures the pod uses the host network and IP
+      hostNetwork: true  # Ensure it uses the host network
       containers:
-        - args:
-            - >
-              npm install -g create-react-app && \
-
-              npx create-react-app /app && \
-
-              cd /app && \
-
-              npm start --host 0.0.0.0  # Binds the app to all network interfaces
-          command:
-            - /bin/sh
-            - -c
+        - name: react-container
           image: node:alpine
-          imagePullPolicy: IfNotPresent
-          name: react-container
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              npm install -g npm@10.9.0 && \
+              npm install -g create-react-app && \
+              npx create-react-app /app && \
+              cd /app && \
+              npm start --host 0.0.0.0 --port 80  # Serve the app on port 80
           ports:
-            - containerPort: 3000
+            - containerPort: 80  # Changed to 80
               protocol: TCP
           volumeMounts:
             - mountPath: /app
               name: react-volume
       nodeSelector:
-        kubernetes.io/hostname: slave2  # Ensure pod runs on slave2
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
+        kubernetes.io/hostname: slave2  # Ensure the pod runs on slave2
       volumes:
         - emptyDir: {}
           name: react-volume
@@ -74,11 +43,12 @@ metadata:
   name: react-app-service
   namespace: node-js
 spec:
-  type: NodePort  # This exposes the service on a NodePort
+  type: NodePort
   selector:
     app: react-app
   ports:
     - protocol: TCP
-      port: 3000        # Internal Cluster Port
-      targetPort: 3000  # Target port in the container
-      nodePort: 32000   # External NodePort (between 30000-32767)
+      port: 80        # External HTTP port
+      targetPort: 80  # Target port inside the container
+      nodePort: 32000   # NodePort for host access
+
