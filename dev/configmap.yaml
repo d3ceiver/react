@@ -1,7 +1,7 @@
 spec:
   containers:
     - name: react-container
-      image: node:alpine
+      image: node:latest
       ports:
         - containerPort: 80
       volumeMounts:
