@@ -26,10 +26,9 @@ spec:
             - /bin/sh
             - '-c'
             - |
-              # Check if /app/src exists and is empty
-              if [ ! -d /app/src ] || [ "$(ls -A /app/src)" ]; then
-                echo "Setting up initial app directory";
-                # Optionally copy any required initial files here
+              if [ ! -d /app/node_modules ]; then
+                echo "Installing dependencies...";
+                cd /app && npm install;
               fi
           volumeMounts:
             - mountPath: /app
@@ -43,9 +42,9 @@ spec:
             - '-c'
           args:
             - |
-              npm install -g npm@10.9.0 && \
               cd /app && \
-              if [ ! -f /app/src/App.js ]; then \
+              if [ ! -f package.json ]; then \
+                echo "No project found, creating a new React app..."; \
                 npx create-react-app .; \
               fi && \
               npm start --host 0.0.0.0 --port 80  # Start the app on port 80
