@@ -13,46 +13,47 @@ spec:
       labels:
         app: react-app
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: slave2  # Ensure it runs on slave2
-      volumes:
-        - name: react-volume
-          persistentVolumeClaim:
-            claimName: react-app-pvc
-      initContainers:
-        - name: init-app
-          image: 'busybox'
-          command:
-            - /bin/sh
-            - '-c'
-            - |
-              if [ ! -d /app/node_modules ]; then
-                echo "Installing dependencies...";
-                cd /app && npm install;
-              fi
-          volumeMounts:
-            - mountPath: /app
-              name: react-volume
       containers:
         - name: react-container
           image: 'node:latest'
-          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          command: ["/bin/sh", "-c"]
+          args: ["npm start"]
+          volumeMounts:
+            - name: react-volume
+              mountPath: /app
+      initContainers:
+        - name: init-app
+          image: 'node:latest'  # or 'alpine' or 'busybox'
           command:
             - /bin/sh
             - '-c'
           args:
             - |
-              cd /app && \
-              if [ ! -f package.json ]; then \
-                echo "No project found, creating a new React app..."; \
-                npx create-react-app .; \
-              fi && \
-              npm start --host 0.0.0.0 --port 80  # Start the app on port 80
-          ports:
-            - containerPort: 80
-              hostPort: 80
-              protocol: TCP
+              if [ ! -d /app/node_modules ]; then \
+                echo "Installing dependencies..."; \
+                cd /app && npm install; \
+              fi && chmod -R 777 /app
           volumeMounts:
             - mountPath: /app
               name: react-volume
-      restartPolicy: Always
+      volumes:
+        - name: react-volume
+          persistentVolumeClaim:
+            claimName: react-app-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-app-service
+  namespace: node-js
+spec:
+  selector:
+    app: react-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: NodePort
+
