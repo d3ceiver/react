@@ -30,7 +30,7 @@ spec:
             - containerPort: 80  # Changed to 80
               protocol: TCP
           volumeMounts:
-            - mountPath: /app
+            - mountPath: /app/src  # Mount your source code to /app/src
               name: react-volume
       nodeSelector:
         kubernetes.io/hostname: slave2  # Ensure the pod runs on slave2
@@ -38,7 +38,6 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc  # Use your actual PVC name
-
 ---
 apiVersion: v1
 kind: Service
