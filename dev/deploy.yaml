@@ -13,44 +13,46 @@ spec:
       labels:
         app: react-app
     spec:
-      hostNetwork: true  # Ensure it uses the host network
-      containers:
-        - name: react-container
-          image: node:latest  # Use a specific version of Node.js
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              npm install -g npm@10.9.0 && \
-              npm install -g create-react-app && \
-              rm -rf /app/* && \  # Remove existing files
-              npx create-react-app /app && \
-              cd /app && \
-              npm start --host 0.0.0.0 --port 80  # Serve the app on port 80
-          ports:
-            - containerPort: 80  # Changed to 80
-              protocol: TCP
-          volumeMounts:
-            - mountPath: /app/src  # Mount your source code to /app/src
-              name: react-volume
       nodeSelector:
-        kubernetes.io/hostname: slave2  # Ensure the pod runs on slave2
+        kubernetes.io/hostname: slave2  # Ensure it runs on slave2
       volumes:
         - name: react-volume
           persistentVolumeClaim:
-            claimName: react-app-pvc  # Use your actual PVC name
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: react-app-service
-  namespace: node-js
-spec:
-  type: NodePort
-  selector:
-    app: react-app
-  ports:
-    - protocol: TCP
-      port: 80        # External HTTP port
-      targetPort: 80  # Target port inside the container
-      nodePort: 32000  # NodePort for host access
-
+            claimName: react-app-pvc
+      initContainers:
+        - name: init-app
+          image: 'busybox'
+          command:
+            - /bin/sh
+            - '-c'
+            - |
+              if [ ! -d /app/src ]; then
+                echo "Setting up initial app directory";
+                # Optionally copy any required initial files here
+              fi
+          volumeMounts:
+            - mountPath: /app
+              name: react-volume
+      containers:
+        - name: react-container
+          image: 'node:latest'
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - '-c'
+          args:
+            - |
+              npm install -g npm@10.9.0 && \
+              cd /app && \
+              if [ ! -f /app/src/App.js ]; then \
+                npx create-react-app /app; \
+              fi && \
+              npm start --host 0.0.0.0 --port 80  # Start the app on port 80
+          ports:
+            - containerPort: 80
+              hostPort: 80
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app
+              name: react-volume
+      restartPolicy: Always
