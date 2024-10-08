@@ -25,14 +25,14 @@ spec:
               mkdir -p /app && cd /app && \
               if [ ! -f package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
-                rm -rf /app/* && npm create vite@latest . -- --template react-ts && npm install; \
+                npm create vite@latest . -- --template react-ts && npm install; \
               else \
                 echo "/app directory exists. Installing dependencies..."; \
                 npm install; \
               fi && \
-              npm run dev -- --host 0.0.0.0 --port 80
+              npm run dev -- --host 0.0.0.0 --port 3000
           ports:
-            - containerPort: 80
+            - containerPort: 3000
               protocol: TCP
           volumeMounts:
             - mountPath: /app
