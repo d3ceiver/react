@@ -16,21 +16,21 @@ spec:
       hostNetwork: true
       containers:
         - name: react-container
-          image: node:latest
+          image: node:latest  # Consider using a specific version like 'node:14'
           command: ["/bin/sh", "-c"]
           args:
             - |
-              npm install -g npm@10.9.0 && \
-              npm install -g vite && \
               mkdir -p /app && \
-              if [ ! -d /app/node_modules ]; then \
-                echo "Installing global dependencies..."; \
-                cd /app && npm install; \
-              fi && \
               if [ ! -f /app/package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
+                npm install -g npm@10.9.0 && \
+                npm install -g vite && \
                 cd /app && npm init @vitejs/app . --template react-ts && \
                 npm install; \
+              fi && \
+              if [ ! -d /app/node_modules ]; then \
+                echo "Installing project dependencies..."; \
+                cd /app && npm install; \
               fi && \
               cd /app && npm run dev -- --host 0.0.0.0 --port 80
           ports:
