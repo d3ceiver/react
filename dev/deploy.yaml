@@ -21,16 +21,17 @@ spec:
           args:
             - |
               npm install -g npm@10.9.0 && \
-              npm install -g create-react-app && \
+              npm install -g vite && \
               if [ ! -d /app/node_modules ]; then \
-                echo "Dependencies missing. Installing dependencies..."; \
+                echo "Installing dependencies..."; \
                 cd /app && npm install; \
               fi && \
               if [ ! -f /app/package.json ]; then \
-                echo "Creating new React app..."; \
-                npx create-react-app /app; \
+                echo "Creating new Vite app..."; \
+                npm init @vitejs/app /app --template react && \
+                cd /app && npm install; \
               fi && \
-              cd /app && npm start --host 0.0.0.0 --port 80
+              cd /app && npm run dev -- --host 0.0.0.0 --port 80
           ports:
             - containerPort: 80
               protocol: TCP
