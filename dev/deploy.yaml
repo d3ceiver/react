@@ -15,57 +15,25 @@ spec:
     spec:
       containers:
         - name: react-container
-          image: 'node:latest'
+          image: node:latest
           ports:
-            - containerPort: 3000
-          command: ["/bin/sh", "-c"]
-          args: ["npm start"]
-          volumeMounts:
-            - name: react-volume
-              mountPath: /app
-      initContainers:
-        - name: init-app
-          image: 'node:latest'
-          command:
-            - /bin/sh
-            - '-c'
-          args:
-            - |
-              if [ ! -d /app/node_modules ]; then \
-                echo "Installing dependencies..."; \
-                cd /app && npm install; \
-              fi && chmod -R 777 /app
+            - containerPort: 80
           volumeMounts:
             - mountPath: /app
-              name: react-volume
+              name: react-app-storage
+            - name: config-volume
+              mountPath: /etc/config  # Adjust the mount path as necessary
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: react-app-config
+                  key: NODE_ENV
       volumes:
-        - name: react-volume
+        - name: react-app-storage
           persistentVolumeClaim:
             claimName: react-app-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: react-app-service
-  namespace: node-js
-spec:
-  selector:
-    app: react-app
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: NodePort
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: react-app-pvc
-  namespace: node-js
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+        - name: config-volume
+          configMap:
+            name: react-app-config
 
