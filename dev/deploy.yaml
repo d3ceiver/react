@@ -13,7 +13,6 @@ spec:
       labels:
         app: react-app
     spec:
-      hostNetwork: true
       containers:
         - name: react-container
           image: node:latest
