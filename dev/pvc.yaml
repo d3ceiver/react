@@ -1,19 +1,4 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: react-app-pv
-  namespace: node-js
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /data/react-app
-
----
-
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: react-app-pvc
