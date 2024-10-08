@@ -13,16 +13,26 @@ spec:
       labels:
         app: react-app
     spec:
+      hostNetwork: true
       containers:
         - name: react-container
-          image: 'node:latest'
-          ports:
-            - containerPort: 3000
+          image: node:latest  # Consider using a specific version like 'node:14'
           command: ["/bin/sh", "-c"]
-          args: ["npm start"]
+          args:
+            - |
+              npm install -g npm@10.9.0 && \
+              npm install -g create-react-app && \
+              npx create-react-app /app && \
+              cd /app && \
+              npm start --host 0.0.0.0 --port 80
+          ports:
+            - containerPort: 80
+              protocol: TCP
           volumeMounts:
-            - name: react-volume
-              mountPath: /app
+            - mountPath: /app
+              name: react-volume
+      nodeSelector:
+        kubernetes.io/hostname: slave2
       volumes:
         - name: react-volume
           persistentVolumeClaim:
