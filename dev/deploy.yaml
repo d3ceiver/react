@@ -23,13 +23,13 @@ spec:
               npm install -g npm@10.9.0 && \
               npm install -g vite && \
               if [ ! -d /app/node_modules ]; then \
-                echo "Installing dependencies..."; \
+                echo "Installing global dependencies..."; \
                 cd /app && npm install; \
               fi && \
               if [ ! -f /app/package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
-                npm init @vitejs/app /app --template react-ts && \
-                cd /app && npm install; \
+                mkdir -p /app && cd /app && npm init @vitejs/app . --template react-ts && \
+                npm install; \
               fi && \
               cd /app && npm run dev -- --host 0.0.0.0 --port 80
           ports:
@@ -44,3 +44,4 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
+
