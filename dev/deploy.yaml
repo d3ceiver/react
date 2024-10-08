@@ -22,9 +22,15 @@ spec:
             - |
               npm install -g npm@10.9.0 && \
               npm install -g create-react-app && \
-              npx create-react-app /app && \
-              cd /app && \
-              npm start --host 0.0.0.0 --port 80
+              if [ ! -d /app/node_modules ]; then \
+                echo "Dependencies missing. Installing dependencies..."; \
+                cd /app && npm install; \
+              fi && \
+              if [ ! -f /app/package.json ]; then \
+                echo "Creating new React app..."; \
+                npx create-react-app /app; \
+              fi && \
+              cd /app && npm start --host 0.0.0.0 --port 80
           ports:
             - containerPort: 80
               protocol: TCP
@@ -37,5 +43,3 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
-
-
