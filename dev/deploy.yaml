@@ -27,8 +27,8 @@ spec:
                 cd /app && npm install; \
               fi && \
               if [ ! -f /app/package.json ]; then \
-                echo "Creating new Vite app..."; \
-                npm init @vitejs/app /app --template react && \
+                echo "Creating new Vite app with React and TypeScript..."; \
+                npm init @vitejs/app /app --template react-ts && \
                 cd /app && npm install; \
               fi && \
               cd /app && npm run dev -- --host 0.0.0.0 --port 80
