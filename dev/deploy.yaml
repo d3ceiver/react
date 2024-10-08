@@ -16,7 +16,7 @@ spec:
       hostNetwork: true
       containers:
         - name: react-container
-          image: node:latest  # Consider using a specific version like 'node:14'
+          image: node:latest
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -25,7 +25,7 @@ spec:
               mkdir -p /app && cd /app && \
               if [ ! -f package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
-                npm create vite@latest /app -- --template react-ts && cd /app && npm install; \
+                rm -rf /app/* && npm create vite@latest . -- --template react-ts && npm install; \
               else \
                 echo "/app directory exists. Installing dependencies..."; \
                 npm install; \
