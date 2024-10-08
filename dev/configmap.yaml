@@ -1,24 +1,7 @@
-spec:
-  containers:
-    - name: react-container
-      image: node:latest
-      ports:
-        - containerPort: 80
-      volumeMounts:
-        - mountPath: /app
-          name: react-app-storage
-        - name: config-volume
-          mountPath: /etc/config  # Adjust the mount path as necessary
-      env:
-        - name: NODE_ENV
-          valueFrom:
-            configMapKeyRef:
-              name: react-app-config
-              key: NODE_ENV
-  volumes:
-    - name: react-app-storage
-      persistentVolumeClaim:
-        claimName: react-app-pvc
-    - name: config-volume
-      configMap:
-        name: react-app-config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: react-app-config
+  namespace: node-js
+data:
+  NODE_ENV: production  # Or whatever environment value you need
