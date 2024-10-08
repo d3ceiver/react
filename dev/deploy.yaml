@@ -25,7 +25,7 @@ spec:
               mountPath: /app
       initContainers:
         - name: init-app
-          image: 'node:latest'  # or 'alpine' or 'busybox'
+          image: 'node:latest'
           command:
             - /bin/sh
             - '-c'
@@ -56,4 +56,16 @@ spec:
       port: 80
       targetPort: 3000
   type: NodePort
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: react-app-pvc
+  namespace: node-js
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
 
