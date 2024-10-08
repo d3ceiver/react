@@ -15,25 +15,17 @@ spec:
     spec:
       containers:
         - name: react-container
-          image: node:latest
+          image: 'node:latest'
           ports:
-            - containerPort: 80
+            - containerPort: 3000
+          command: ["/bin/sh", "-c"]
+          args: ["npm start"]
           volumeMounts:
-            - mountPath: /app
-              name: react-app-storage
-            - name: config-volume
-              mountPath: /etc/config  # Adjust the mount path as necessary
-          env:
-            - name: NODE_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: react-app-config
-                  key: NODE_ENV
+            - name: react-volume
+              mountPath: /app
       volumes:
-        - name: react-app-storage
+        - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
-        - name: config-volume
-          configMap:
-            name: react-app-config
+
 
