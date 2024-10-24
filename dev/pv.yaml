@@ -8,4 +8,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data/react-app  # Adjust this path according to your node setup
+    path: /home/manager/app  # Adjust this path according to your node setup
