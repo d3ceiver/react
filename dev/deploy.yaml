@@ -24,10 +24,10 @@ spec:
               mkdir -p /app && cd /app && \
               if [ ! -f package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
-                npm create vite@latest . -- --template react-ts && npm install axios && npm install; \
+                npm create vite@latest . -- --template react-ts && npm install axios express && npm install; \
               else \
                 echo "/app directory exists. Installing dependencies..."; \
-                npm install axios && npm install; \
+                npm install axios express && npm install; \
               fi && \
               chmod +x ./node_modules/.bin/vite && \
               npm run dev -- --host 0.0.0.0 --port 3000
