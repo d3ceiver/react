@@ -31,9 +31,9 @@ spec:
                 npm install axios express cors; \
               fi && \
               chmod +x ./node_modules/.bin/vite && \
-              npm run dev -- --host 0.0.0.0 --port 3000
+              npm run dev -- --host 0.0.0.0 --port 30080
           ports:
-            - containerPort: 3000
+            - containerPort: 30080
               protocol: TCP
           volumeMounts:
             - mountPath: /app
