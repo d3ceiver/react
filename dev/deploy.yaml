@@ -20,7 +20,7 @@ spec:
           args:
             - |
               npm install -g npm@10.9.0 && \
-              npm install -g create-vite && \
+              npm install -g create-vite ts-node && \
               mkdir -p /app && cd /app && \
               if [ ! -f package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
