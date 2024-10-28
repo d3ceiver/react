@@ -10,6 +10,8 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 3000
-      nodePort: 30080  # Specify the NodePort here
+      nodePort: 30080
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
   type: NodePort
-
