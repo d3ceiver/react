@@ -13,6 +13,7 @@ spec:
       labels:
         app: react-app
     spec:
+      hostNetwork: true
       containers:
         - name: react-container
           image: node:latest
@@ -20,14 +21,14 @@ spec:
           args:
             - |
               npm install -g npm@10.9.0 && \
-              npm install -g create-vite cors && \
+              npm install -g create-vite && \
               mkdir -p /app && cd /app && \
               if [ ! -f package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
                 npm create vite@latest . -- --template react-ts && npm install axios express cors && npm install; \
               else \
                 echo "/app directory exists. Installing dependencies..."; \
-                npm install axios express cors && npm install; \
+                npm install axios express cors; \
               fi && \
               chmod +x ./node_modules/.bin/vite && \
               npm run dev -- --host 0.0.0.0 --port 3000
