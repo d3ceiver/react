@@ -22,7 +22,7 @@ spec:
               apt-get update && \
               apt-get install -y nano && \
               npm install -g npm@10.9.0 && \
-              npm install -g create-vite ts-node typescript && \
+              npm install -g create-vite typescript ts-node && \
               mkdir -p /app && cd /app && \
               if [ ! -f package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
@@ -32,8 +32,9 @@ spec:
                 npm install axios express cors; \
               fi && \
               chmod +x ./node_modules/.bin/vite && \
+              npx tsc /app/script.ts && \
               npm run dev -- --host 192.168.0.162 --port 3000 & \
-              ./node_modules/.bin/ts-node /app/script.ts
+              node /app/script.js
           ports:
             - containerPort: 3000
               protocol: TCP
