@@ -23,7 +23,7 @@ spec:
               apt-get install -y nano && \
               npm install -g npm@10.9.0 && \
               npm install -g create-vite ts-node typescript && \
-              mkdir -p /app && cd /app && \
+              cd /app && \
               if [ ! -f package.json ]; then \
                 echo "Creating new Vite app with React and TypeScript..."; \
                 npm create vite@latest . -- --template react-ts && npm install axios express cors && npm install; \
