@@ -19,6 +19,8 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
+              apt-get update && \
+              apt-get install -y nano && \
               npm install -g npm@10.9.0 && \
               npm install -g create-vite ts-node typescript && \
               mkdir -p /app && cd /app && \
@@ -31,7 +33,7 @@ spec:
               fi && \
               chmod +x ./node_modules/.bin/vite && \
               npm run dev -- --host 192.168.0.162 --port 3000 & \
-              ts-node /app/script.ts
+              ./node_modules/.bin/ts-node /app/script.ts
           ports:
             - containerPort: 3000
               protocol: TCP
