@@ -33,7 +33,7 @@ spec:
               fi && \
               chmod +x ./node_modules/.bin/vite && \
               npm run dev -- --host 192.168.0.162 --port 3000 & \
-              npx ts-node script.ts
+              npx ts-node /app/src/script.ts
           ports:
             - containerPort: 3000
               protocol: TCP
