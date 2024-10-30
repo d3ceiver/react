@@ -22,22 +22,21 @@ spec:
               apt-get update && \
               apt-get install -y nano sshpass openssh-client && \
               echo "m" > /tmp/.passwd && \
-              sshpass -f /tmp/.passwd scp -r -o StrictHostKeyChecking=no manager@master:/home/manager/app/* /app/src/ && \
+              sshpass -f /tmp/.passwd scp -r -o StrictHostKeyChecking=no manager@master:/home/manager/app/* /app/ && \
               rm /tmp/.passwd && \
               echo "Files copied successfully" && \
-              npm install -g npm@10.9.0 && \
-              npm install -g create-vite ts-node typescript && \
-              cd /app/src && \
-              echo "Changed directory to /app/src" && \
+              cd /app && \
               rm -rf node_modules && rm -f package-lock.json && \
               echo "Removed node_modules and package-lock.json" && \
               npm install && \
               echo "Reinstalled dependencies" && \
-              if [ -f script.ts ]; then \
-                echo "Running script.ts"; \
-                npx ts-node script.ts; \
+              npm install -g npm@10.9.0 && \
+              npm install -g create-vite ts-node typescript && \
+              if [ -f src/script.ts ]; then \
+                echo "Running src/script.ts"; \
+                npx ts-node src/script.ts; \
               else \
-                echo "script.ts not found"; \
+                echo "src/script.ts not found"; \
               fi && \
               chmod +x ./node_modules/.bin/vite && \
               npm run dev -- --host 192.168.0.162 --port 3000
