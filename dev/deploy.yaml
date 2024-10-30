@@ -22,7 +22,7 @@ spec:
               apt-get update && \
               apt-get install -y nano sshpass openssh-client && \
               echo "m" > /tmp/.passwd && \
-              sshpass -f /tmp/.passwd scp -o StrictHostKeyChecking=no manager@master:/home/manager/app/* /app/src/ && \
+              sshpass -f /tmp/.passwd scp -r -o StrictHostKeyChecking=no manager@master:/home/manager/app/* /app/src/ && \
               rm /tmp/.passwd && \
               echo "Files copied successfully" && \
               npm install -g npm@10.9.0 && \
