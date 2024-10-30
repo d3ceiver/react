@@ -32,14 +32,16 @@ spec:
               echo "Reinstalled dependencies" && \
               npm install -g npm@10.9.0 && \
               npm install -g create-vite ts-node typescript && \
-              if [ -f src/script.ts ]; then \
+              echo "Global packages installed" && \
+              cd /app/src && \
+              if [ -f script.ts ]; then \
                 echo "Running src/script.ts"; \
-                npx ts-node src/script.ts; \
+                npx ts-node script.ts; \
               else \
                 echo "src/script.ts not found"; \
               fi && \
-              chmod +x ./node_modules/.bin/vite && \
-              npm run dev -- --host 0.0.0.0 --port 3000
+              chmod +x /app/node_modules/.bin/vite && \
+              npm run dev -- --host 192.168.0.162 --port 3000
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -54,5 +56,4 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
-
 
