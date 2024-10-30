@@ -28,6 +28,11 @@ spec:
               npm install -g npm@10.9.0 && \
               npm install -g create-vite ts-node typescript && \
               cd /app/src && \
+              echo "Changed directory to /app/src" && \
+              rm -rf node_modules && rm -f package-lock.json && \
+              echo "Removed node_modules and package-lock.json" && \
+              npm install && \
+              echo "Reinstalled dependencies" && \
               if [ -f script.ts ]; then \
                 echo "Running script.ts"; \
                 npx ts-node script.ts; \
@@ -50,4 +55,5 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
+
 
