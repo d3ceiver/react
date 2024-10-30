@@ -15,8 +15,16 @@ spec:
     spec:
       initContainers:
         - name: init-volume
-          image: busybox
-          command: ['sh', '-c', 'while [ ! -d /app/src ]; do echo "Waiting for volume to mount..."; sleep 1; done;']
+          image: node:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt-get update && apt-get install -y nano sshpass openssh-client && \
+              mkdir -p /app/src && \
+              echo "m" > /tmp/.passwd && \
+              sshpass -f /tmp/.passwd scp -o StrictHostKeyChecking=no manager@master:/home/manager/app/* /app/src/ && \
+              rm /tmp/.passwd && \
+              echo "Files copied successfully"
           volumeMounts:
             - mountPath: /app
               name: react-volume
@@ -53,3 +61,4 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
+
