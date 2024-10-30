@@ -13,6 +13,13 @@ spec:
       labels:
         app: react-app
     spec:
+      initContainers:
+        - name: init-volume
+          image: busybox
+          command: ['sh', '-c', 'while [ ! -d /app/src ]; do echo "Waiting for volume to mount..."; sleep 1; done;']
+          volumeMounts:
+            - mountPath: /app
+              name: react-volume
       containers:
         - name: react-container
           image: node:latest
@@ -23,17 +30,15 @@ spec:
               apt-get install -y nano && \
               npm install -g npm@10.9.0 && \
               npm install -g create-vite ts-node typescript && \
-              cd /app && \
-              if [ ! -f package.json ]; then \
-                echo "Creating new Vite app with React and TypeScript..."; \
-                npm create vite@latest . -- --template react-ts && npm install axios express cors && npm install; \
+              cd /app/src && \
+              if [ -f script.ts ]; then \
+                echo "Running script.ts"; \
+                npx ts-node script.ts; \
               else \
-                echo "/app directory exists. Installing dependencies..."; \
-                npm install axios express cors; \
+                echo "script.ts not found"; \
               fi && \
               chmod +x ./node_modules/.bin/vite && \
-              npm run dev -- --host 192.168.0.162 --port 3000 & \
-              npx ts-node /app/src/script.ts
+              npm run dev -- --host 192.168.0.162 --port 3000
           ports:
             - containerPort: 3000
               protocol: TCP
