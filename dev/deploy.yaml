@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,6 +22,10 @@ spec:
             - |
               apt-get update && \
               apt-get install -y nano sshpass openssh-client && \
+              if [ -d /app ]; then \
+                rm -rf /app/*; \
+              fi && \
+              echo "Cleaned up /app directory" && \
               echo "m" > /tmp/.passwd && \
               sshpass -f /tmp/.passwd scp -r -o StrictHostKeyChecking=no manager@master:/home/manager/app/* /app/ && \
               rm /tmp/.passwd && \
@@ -57,4 +62,3 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
-
