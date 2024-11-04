@@ -19,8 +19,10 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
+              echo "Starting deployment script..." && \
               apt-get update && \
               apt-get install -y nano sshpass openssh-client && \
+              echo "Installed required packages" && \
               if [ -d /app ]; then \
                 rm -rf /app/*; \
               fi && \
@@ -30,14 +32,18 @@ spec:
               rm /tmp/.passwd && \
               echo "Files copied successfully" && \
               cd /app && \
+              echo "Current directory: $(pwd)" && \
+              ls -la /app && \
               rm -rf node_modules && rm -f package-lock.json && \
               echo "Removed node_modules and package-lock.json" && \
               npm install && \
               echo "Reinstalled dependencies" && \
               npm install -g npm@10.9.0 && \
-              npm install -g create-vite ts-node typescript && \
+              npm install -g create-vite typescript && \
               echo "Global packages installed" && \
               cd /app/src && \
+              echo "Current directory: $(pwd)" && \
+              ls -la /app/src && \
               if [ -f script.js ]; then \
                 echo "Running script.js"; \
                 node script.js; \
@@ -61,3 +67,4 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
+
