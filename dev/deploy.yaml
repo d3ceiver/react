@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -62,3 +61,4 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
+
