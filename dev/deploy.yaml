@@ -38,8 +38,6 @@ spec:
               npm install -g create-vite ts-node typescript && \
               echo "Global packages installed" && \
               cd /app/src && \
-              tsc script.ts && \
-              echo "Compiled TypeScript to JavaScript" && \
               if [ -f script.js ]; then \
                 echo "Running script.js"; \
                 node script.js; \
@@ -63,5 +61,3 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
-
-
