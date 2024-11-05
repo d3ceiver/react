@@ -43,8 +43,8 @@ spec:
               npm install -g create-vite typescript && \
               echo "Global packages installed" && \
               cd /app/src && \
-              echo "Current directory: $(pwd)" && \
-              ls -la /app/src && \
+              mv script.js script.cjs && \
+              echo "Renamed script.js to script.cjs" && \
               if [ -f script.cjs ]; then \
                 echo "Running script.cjs"; \
                 node script.cjs; \
@@ -68,5 +68,4 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
-
 
