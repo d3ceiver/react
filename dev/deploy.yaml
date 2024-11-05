@@ -13,6 +13,7 @@ spec:
       labels:
         app: react-app
     spec:
+      hostNetwork: true  # Ensures the pod uses the host's network
       containers:
         - name: react-container
           image: node:latest
@@ -67,4 +68,5 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
+
 
