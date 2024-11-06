@@ -17,14 +17,6 @@ spec:
       containers:
         - name: react-container
           image: node:14.17.0  # Use a specific image version
-          env:
-            - name: NODE_ENV
-              value: production
-            - name: API_URL
-              valueFrom:
-                secretKeyRef:
-                  name: api-secrets
-                  key: api-url
           command: ["/bin/sh", "-c"]
           args:
             - |
