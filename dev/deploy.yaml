@@ -33,7 +33,7 @@ spec:
               rm /tmp/.passwd && \
               echo "Files copied successfully" && \
               cd /app && \
-              echo "Current directory: $(pwd)" && \
+              echo "Current directory (post-copy): $(pwd)" && \
               ls -la /app && \
               rm -rf node_modules && rm -f package-lock.json && \
               echo "Removed node_modules and package-lock.json" && \
@@ -43,7 +43,7 @@ spec:
               npm install -g create-vite typescript && \
               echo "Global packages installed" && \
               cd /app/src && \
-              echo "Current directory: $(pwd)" && \
+              echo "Current directory (pre-script): $(pwd)" && \
               ls -la /app/src && \
               if [ -f script.cjs ]; then \
                 echo "Running script.cjs"; \
@@ -53,7 +53,7 @@ spec:
                 ls -la /app/src; \
               fi && \
               cd /app && \  # Navigate back to the /app directory
-              echo "Current directory: $(pwd)" && \
+              echo "Current directory (pre-vite): $(pwd)" && \
               npm run dev -- --host 0.0.0.0 --port 3000  # Start the Vite server on port 3000
           ports:
             - containerPort: 3000
@@ -69,5 +69,4 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
-
 
