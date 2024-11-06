@@ -50,7 +50,7 @@ spec:
                 node script.cjs; \
               else \
                 echo "script.cjs not found"; \
-                ls -la /app/src && \
+                ls -la /app/src; \
               fi && \
               chmod +x /app/node_modules/.bin/vite && \
               echo "Vite binary made executable" && \
