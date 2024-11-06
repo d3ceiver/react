@@ -52,10 +52,8 @@ spec:
                 echo "script.cjs not found"; \
                 ls -la /app/src; \
               fi && \
-              chmod +x /app/node_modules/.bin/vite && \
-              echo "Vite binary made executable" && \
-              cd /app && \
-              npm run dev -- --host 0.0.0.0 --port 3000
+              cd /app && \  # Navigate back to the /app directory
+              npm run dev -- --host 0.0.0.0 --port 3000  # Start the Vite server on port 3000
           ports:
             - containerPort: 3000
               protocol: TCP
