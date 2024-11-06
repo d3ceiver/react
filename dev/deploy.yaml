@@ -59,3 +59,14 @@ spec:
             - containerPort: 3000
               protocol: TCP
             - containerPort: 5000
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app
+              name: react-volume
+      nodeSelector:
+        kubernetes.io/hostname: slave2
+      volumes:
+        - name: react-volume
+          persistentVolumeClaim:
+            claimName: react-app-pvc
+
