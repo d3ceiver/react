@@ -43,11 +43,14 @@ spec:
               npm install -g create-vite typescript && \
               echo "Global packages installed" && \
               cd /app/src && \
+              echo "Current directory: $(pwd)" && \
+              ls -la /app/src && \
               if [ -f script.cjs ]; then \
                 echo "Running script.cjs"; \
                 node script.cjs; \
               else \
                 echo "script.cjs not found"; \
+                ls -la /app/src && \
               fi && \
               chmod +x /app/node_modules/.bin/vite && \
               echo "Vite binary made executable" && \
@@ -67,5 +70,6 @@ spec:
         - name: react-volume
           persistentVolumeClaim:
             claimName: react-app-pvc
+
 
 
